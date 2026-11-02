@@ -1,6 +1,7 @@
 """ResolutionAdjust mod icon, in the Drinkable "STAY FRESH" poster style: sage poster with cream edges, a sun,
 an ink-outlined vintage monitor whose screen is half pixelated / half sharp with an adjust knob, and the name in
 Alfa Slab One letters (RESOLUTION dark / ADJUST light).
+The 256 px icon is saved as a 48-colour PNG (about 12 KB); the 1024 px master keeps full colour.
 Usage: python3 resadj_icon.py <AlfaSlabOne-Regular.ttf> <out.png>"""
 import sys, random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance, ImageChops
@@ -111,9 +112,12 @@ for _ in range(260):
     x, y, r = rnd.randrange(S), rnd.randrange(S), rnd.choice([2, 3, 3, 4])
     gd.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 240, rnd.randrange(60, 140)))
 img.alpha_composite(g)
-noise = Image.effect_noise((S, S), 22).convert("L")
-n = Image.merge("RGBA", (noise, noise, noise, Image.new("L", (S, S), 26)))
-img = Image.alpha_composite(img, n)
 img.convert("RGB").save(OUT.replace(".png", "_1024.png"))
-img.convert("RGB").resize((256, 256), Image.LANCZOS).save(OUT)
+# small file: no per-pixel noise (it doesn't compress), and a 64-colour palette
+small = img.convert("RGB").resize((256, 256), Image.LANCZOS)
+base = small.quantize(colors=46, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+pal = base.getpalette()[:3 * 46] + [176, 62, 50, 219, 190, 52]   # keep the red light and the sun yellow
+pimg = Image.new("P", (1, 1))
+pimg.putpalette(pal + [0] * (768 - len(pal)))
+small.quantize(palette=pimg, dither=Image.Dither.NONE).save(OUT, optimize=True)
 print("ok")
