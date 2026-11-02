@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>ResolutionAdjust</AssemblyName>
+        <RootNamespace>ResolutionAdjust</RootNamespace>
+        <Product>ResolutionAdjust</Product>
+        <Version>1.0.0</Version>
+        <LangVersion>latest</LangVersion>
+        <Nullable>disable</Nullable>
+        <OutputPath>bin</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Set these to your BepInEx core folder and Lethal Company's Managed folder -->
+        <BepInExCore Condition="'$(BepInExCore)' == ''">Libraries/</BepInExCore>
+        <GameManaged Condition="'$(GameManaged)' == ''">Libraries/</GameManaged>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="BepInEx" HintPath="$(BepInExCore)BepInEx.dll" Private="false" />
+        <Reference Include="0Harmony" HintPath="$(BepInExCore)0Harmony.dll" Private="false" />
+        <GameDll Include="Assembly-CSharp" />
+        <GameDll Include="UnityEngine" />
+        <GameDll Include="UnityEngine.CoreModule" />
+        <GameDll Include="Unity.TextMeshPro" />
+        <GameDll Include="UnityEngine.UI" />
+        <GameDll Include="Unity.Netcode.Runtime" />
+        <GameDll Include="Unity.InputSystem" />
+        <Reference Include="@(GameDll)" HintPath="$(GameManaged)%(Identity).dll" Private="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="bin\**;obj\**" />
+    </ItemGroup>
+
+</Project>
