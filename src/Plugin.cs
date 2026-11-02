@@ -11,7 +11,7 @@ namespace ResolutionAdjust
     {
         public const string Guid = "Miles.ResolutionAdjust";
         public const string Name = "ResolutionAdjust";
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.1";
 
         internal static ManualLogSource Log;
         internal static ConfigEntry<int> Width;
